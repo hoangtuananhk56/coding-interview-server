@@ -57,10 +57,8 @@ const updateComment = async (req, res) => {
 const deleteComment = async (req, res) => {
     await Comment
     .findByIdAndDelete({ _id: req.params.id }) // conditition
-    .skip((perPage * page) - perPage)
-    .limit(perPage)
     .then((comments) => {
-        if (!comments.length) {
+        if (!comments) {
             return res
                 .status(404)
                 .json({ success: false, error: `comments not found` })
@@ -75,10 +73,8 @@ const deleteComment = async (req, res) => {
 const getCommentById = async (req, res) => {
     await Comment
     .findById({ _id: req.params.id }) // conditition
-    .skip((perPage * page) - perPage)
-    .limit(perPage)
     .then((comments) => {
-        if (!comments.length) {
+        if (!comments) {
             return res
                 .status(404)
                 .json({ success: false, error: `comments not found` })

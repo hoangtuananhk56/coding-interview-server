@@ -57,10 +57,8 @@ const updateChallenge = async (req, res) => {
 const deleteChallenge = async (req, res) => {
     await Challenge
     .findByIdAndDelete({ _id: req.params.id }) // conditition
-    .skip((perPage * page) - perPage)
-    .limit(perPage)
     .then((challenges) => {
-        if (!challenges.length) {
+        if (!challenges) {
             return res
                 .status(404)
                 .json({ success: false, error: `Challenges not found` })
@@ -75,10 +73,8 @@ const deleteChallenge = async (req, res) => {
 const getChallengeById = async (req, res) => {
     await Challenge
     .findById({ _id: req.params.id }) // conditition
-    .skip((perPage * page) - perPage)
-    .limit(perPage)
     .then((challenges) => {
-        if (!challenges.length) {
+        if (!challenges) {
             return res
                 .status(404)
                 .json({ success: false, error: `Challenges not found` })

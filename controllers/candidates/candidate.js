@@ -94,10 +94,8 @@ const deleteCandidate = async (req, res) => {
 const getCandidateById = async (req, res) => {
     await Candidate
         .findById({ _id: req.params.id }) // conditition
-        .skip((perPage * page) - perPage)
-        .limit(perPage)
         .then((candidates) => {
-            if (!candidates.length) {
+            if (!candidates) {
                 return res
                     .status(404)
                     .json({ success: false, error: `candidates not found` })

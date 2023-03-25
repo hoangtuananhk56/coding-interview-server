@@ -63,10 +63,8 @@ const updateExam = async (req, res) => {
 const deleteExam = async (req, res) => {
     await Exam
         .findByIdAndDelete({ _id: res.params.id }) // conditition
-        .skip((perPage * page) - perPage)
-        .limit(perPage)
         .then((Exams) => {
-            if (!Exams.length) {
+            if (!Exams) {
                 return res
                     .status(404)
                     .json({ success: false, error: `Exams not found` })
@@ -81,10 +79,8 @@ const deleteExam = async (req, res) => {
 const getExamById = async (req, res) => {
     await Exam
         .findById({ _id: res.params.id }) // conditition
-        .skip((perPage * page) - perPage)
-        .limit(perPage)
         .then((Exams) => {
-            if (!Exams.length) {
+            if (!Exams) {
                 return res
                     .status(404)
                     .json({ success: false, error: `Exams not found` })
