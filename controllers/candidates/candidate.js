@@ -1,35 +1,36 @@
 const Candidate = require('../../models/candidates/candidate')
 
 const createCandidate = async (req, res) => {
-	const { email, phone, name, challenge, testid } = req.body
+    const { email, phone, name, challenge, testid } = req.body
 
-	// Simple validation
-	if (!email)
-		return res
-			.status(400)
-			.json({ success: false, message: 'Missing candidatename and/or password' })
+    // Simple validation
+    if (!email)
+        return res
+            .status(400)
+            .json({ success: false, message: 'Missing candidatename and/or password' })
 
-	try {
-		// Check for existing candidate
-		const candidate = await Candidate.findOne({ email })
+    try {
+        // Check for existing candidate
+        const candidate = await Candidate.findOne({ email })
 
-		if (candidate)
-			return res
-				.status(400)
-				.json({ success: false, message: 'Candidatename already taken' })
+        if (candidate)
+            return res
+                .status(400)
+                .json({ success: false, message: 'Candidatename already taken Email' })
 
-		// All good
-		const newCandidate = new Candidate({ email, phone, name, challenge, testid })
-		await newCandidate.save()
+        // All good
+        const newCandidate = new Candidate({ email, phone, name, challenge, testid })
+        await newCandidate.save()
 
-		res.json({
-			success: true,
-			message: 'Candidate created successfully',
-		})
-	} catch (error) {
-		console.log(error)
-		res.status(500).json({ success: false, message: 'Internal server error' })
-	}
+        res.json({
+            success: true,
+            message: 'Candidate created successfully',
+            data: newCandidate,
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Internal server error' })
+    }
 }
 const updateCandidate = async (req, res) => {
     const body = req.body
@@ -73,62 +74,79 @@ const updateCandidate = async (req, res) => {
 }
 
 const deleteCandidate = async (req, res) => {
-    await Candidate.findOneAndDelete({ _id: req.params.id }, (err, candidate) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!candidate) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Candidate not found` })
-        }
-
-        return res.status(200).json({ success: true, data: candidate })
-    }).catch(err => console.log(err))
+    await Candidate
+        .findOneAndDelete({ _id: req.params.id }) // conditition
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((candidates) => {
+            if (!candidates.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `candidates not found` })
+            }
+            return res.status(200).json({
+                success: true,
+                data: candidates
+            })
+        });
 }
 
 const getCandidateById = async (req, res) => {
-    await Candidate.findOne({ _id: req.params.id }, (err, candidate) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!candidate) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Candidate not found` })
-        }
-        return res.status(200).json({ success: true, data: candidate })
-    }).catch(err => console.log(err))
+    await Candidate
+        .findById({ _id: req.params.id }) // conditition
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((candidates) => {
+            if (!candidates.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `candidates not found` })
+            }
+            return res.status(200).json({
+                success: true,
+                data: candidates
+            })
+        });
 }
 
 const getCandidates = async (req, res) => {
-    await Candidate.find({}, (err, candidates) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!candidates.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Candidate not found` })
-        }
-        return res.status(200).json({ success: true, data: candidates })
-    }).catch(err => console.log(err))
+    let perPage = 25;
+    let page = req.params.page || 1;
+    await Candidate
+        .find() // conditition
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((candidates) => {
+            if (!candidates.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `candidates not found` })
+            }
+            return res.status(200).json({
+                success: true,
+                data: candidates
+            })
+        });
 }
 
 const searchCandidates = async (req, res) => {
-    await Candidate.find({email: res.params.email}, (err, candidates) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!candidates.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Candidate not found` })
-        }
-        return res.status(200).json({ success: true, data: candidates })
-    }).catch(err => console.log(err))
+    let perPage = 25;
+    let page = req.params.page || 1;
+    await Candidate
+        .find({ email: res.params.email }) // conditition
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((candidates) => {
+            if (!candidates.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `candidates not found` })
+            }
+            return res.status(200).json({
+                success: true,
+                data: candidates
+            })
+        });
 }
 
 module.exports = {

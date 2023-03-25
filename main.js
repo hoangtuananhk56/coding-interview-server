@@ -27,6 +27,7 @@ app.post("/compile", (req, res) => {
 		"language": language,
 		"input": input
 	});
+	
 	let config = {
 		method: 'post',
 		url: 'https://api.codex.jaagrav.in',
@@ -45,13 +46,13 @@ app.post("/compile", (req, res) => {
 		});
 })
 
-app.use('/api/auth', authRouter)
-app.use('/api/users', userRouter)
+app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/user', userRouter)
 // app.use('/api/user',validateToken, userRouter)
-app.use('/api/candidate', candidateRouter)
-app.use('/api/comment',validateToken, commentRouter)
-app.use('/api/exam',validateToken, examRouter)
-app.use('/api/challenge',validateToken, challengeRouter)
+app.use('/api/v1/candidate', candidateRouter)
+app.use('/api/v1/comment',validateToken, commentRouter)
+app.use('/api/v1/exam',validateToken, examRouter)
+app.use('/api/v1/challenge',validateToken, challengeRouter)
 
 app.listen(process.env.PORT, () => {
 	console.log(`Server listening on port ${process.env.PORT}`);

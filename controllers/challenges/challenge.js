@@ -55,62 +55,79 @@ const updateChallenge = async (req, res) => {
 }
 
 const deleteChallenge = async (req, res) => {
-    await Challenge.findOneAndDelete({ _id: req.params.id }, (err, challenge) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!challenge) {
+    await Challenge
+    .findByIdAndDelete({ _id: req.params.id }) // conditition
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then((challenges) => {
+        if (!challenges.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Challenge not found` })
+                .json({ success: false, error: `Challenges not found` })
         }
-
-        return res.status(200).json({ success: true, data: challenge })
-    }).catch(err => console.log(err))
+        return res.status(200).json({
+            success: true,
+            data: challenges
+        })
+    });
 }
 
 const getChallengeById = async (req, res) => {
-    await Challenge.findOne({ _id: req.params.id }, (err, challenge) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!challenge) {
+    await Challenge
+    .findById({ _id: req.params.id }) // conditition
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then((challenges) => {
+        if (!challenges.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Challenge not found` })
+                .json({ success: false, error: `Challenges not found` })
         }
-        return res.status(200).json({ success: true, data: challenge })
-    }).catch(err => console.log(err))
+        return res.status(200).json({
+            success: true,
+            data: challenges
+        })
+    });
 }
 
 const getChallenges = async (req, res) => {
-    await Challenge.find({}, (err, challenges) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!challenges.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Challenge not found` })
-        }
-        return res.status(200).json({ success: true, data: challenges })
-    }).catch(err => console.log(err))
+    let perPage = 25;
+    let page = req.params.page || 1;
+    await Challenge
+        .find() // conditition
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((challenges) => {
+            if (!challenges.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `Challenges not found` })
+            }
+            return res.status(200).json({
+                success: true,
+                data: challenges
+            })
+        });
 }
 
 const searchChallenges = async (req, res) => {
-    await Challenge.find({email: res.params.email}, { skip: 10, limit: 5 }, (err, challenges) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!challenges.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Challenge not found` })
-        }
-        return res.status(200).json({ success: true, data: challenges })
-    }).catch(err => console.log(err))
+    let perPage = 25;
+    let page = req.params.page || 1;
+    await Challenge
+        .find({email: res.params.email}) // conditition
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .then((challenges) => {
+            if (!challenges.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `Challenges not found` })
+            }
+            return res.status(200).json({
+                success: true,
+                data: challenges
+            })
+        });
 }
 
 module.exports = {

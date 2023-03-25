@@ -6,10 +6,10 @@ const router = express.Router()
 
 //router to Candidate
 router.post('/', candidateControllers.createCandidate)
-router.get('/:id', candidateControllers.getCandidateById)
-router.put('/:id', candidateControllers.updateCandidate)
-router.delete('/:id', candidateControllers.deleteCandidate)
+router.get('/candidate/:id', candidateControllers.getCandidateById)
+router.put('/candidate/:id', candidateControllers.updateCandidate)
+router.delete('/candidate/:id', candidateControllers.deleteCandidate)
 router.get('/candidates', candidateControllers.getCandidates)
-router.get('/:email', candidateControllers.searchCandidates)
+router.get('/candidate/:email', candidateControllers.searchCandidates)
 
 module.exports = router

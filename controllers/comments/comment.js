@@ -55,62 +55,75 @@ const updateComment = async (req, res) => {
 }
 
 const deleteComment = async (req, res) => {
-    await Comment.findOneAndDelete({ _id: req.params.id }, (err, comment) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!comment) {
+    await Comment
+    .findByIdAndDelete({ _id: req.params.id }) // conditition
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then((comments) => {
+        if (!comments.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Comment not found` })
+                .json({ success: false, error: `comments not found` })
         }
-
-        return res.status(200).json({ success: true, data: comment })
-    }).catch(err => console.log(err))
+        return res.status(200).json({
+            success: true,
+            data: comments
+        })
+    });
 }
 
 const getCommentById = async (req, res) => {
-    await Comment.findOne({ _id: req.params.id }, (err, comment) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!comment) {
+    await Comment
+    .findById({ _id: req.params.id }) // conditition
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then((comments) => {
+        if (!comments.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Comment not found` })
+                .json({ success: false, error: `comments not found` })
         }
-        return res.status(200).json({ success: true, data: comment })
-    }).catch(err => console.log(err))
+        return res.status(200).json({
+            success: true,
+            data: comments
+        })
+    });
 }
 
 const getComments = async (req, res) => {
-    await Comment.find({}, (err, comments) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
+    await Comment
+    .find() // conditition
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then((comments) => {
         if (!comments.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Comment not found` })
+                .json({ success: false, error: `comments not found` })
         }
-        return res.status(200).json({ success: true, data: comments })
-    }).catch(err => console.log(err))
+        return res.status(200).json({
+            success: true,
+            data: comments
+        })
+    });
 }
 
 const searchComments = async (req, res) => {
-    await Comment.find({email: res.params.email}, (err, comments) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
+    await Comment
+    .findById({ _id: req.params.id }) // conditition
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
+    .then((comments) => {
         if (!comments.length) {
             return res
                 .status(404)
-                .json({ success: false, error: `Comment not found` })
+                .json({ success: false, error: `comments not found` })
         }
-        return res.status(200).json({ success: true, data: comments })
-    }).catch(err => console.log(err))
+        return res.status(200).json({
+            success: true,
+            data: comments
+        })
+    });
 }
 
 module.exports = {
