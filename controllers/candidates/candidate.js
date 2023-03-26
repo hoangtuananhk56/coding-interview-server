@@ -108,8 +108,10 @@ const getCandidateById = async (req, res) => {
 }
 
 const getCandidates = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
+    let count = await Candidate.countDocuments({})
+    console.log("Count: ", count);
     await Candidate
         .find() // conditition
         .skip((perPage * page) - perPage)
@@ -122,16 +124,19 @@ const getCandidates = async (req, res) => {
             }
             return res.status(200).json({
                 success: true,
-                data: candidates
+                data: candidates,
+                count: count,
+                perPage: perPage,
+                page: page
             })
         });
 }
 
 const searchCandidates = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
     await Candidate
-        .find({ email: res.params.email }) // conditition
+        .find({ email: req.query.email }) // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((candidates) => {

@@ -28,7 +28,7 @@ const updateExam = async (req, res) => {
         })
     }
 
-    Exam.findOne({ _id: req.params.id }, (err, exam) => {
+    Exam.findOne({ _id: req.query.id }, (err, exam) => {
         if (err) {
             return res.status(404).json({
                 err,
@@ -62,7 +62,7 @@ const updateExam = async (req, res) => {
 
 const deleteExam = async (req, res) => {
     await Exam
-        .findByIdAndDelete({ _id: res.params.id }) // conditition
+        .findByIdAndDelete({ _id: req.params.id }) // conditition
         .then((Exams) => {
             if (!Exams) {
                 return res
@@ -78,7 +78,7 @@ const deleteExam = async (req, res) => {
 
 const getExamById = async (req, res) => {
     await Exam
-        .findById({ _id: res.params.id }) // conditition
+        .findById({ _id: req.params.id }) // conditition
         .then((Exams) => {
             if (!Exams) {
                 return res
@@ -93,8 +93,8 @@ const getExamById = async (req, res) => {
 }
 
 const getExams = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
     await Exam
         .find() // conditition
         .skip((perPage * page) - perPage)
@@ -113,10 +113,10 @@ const getExams = async (req, res) => {
 }
 
 const searchExams = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
     await Exam
-        .find({ title: res.params.title }) // conditition
+        .find({ title: req.params.title }) // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((Exams) => {

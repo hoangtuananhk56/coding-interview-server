@@ -10,7 +10,7 @@ const updateUser = async (req, res) => {
         })
     }
 
-    User.findOne({ _id: req.params.id }.then((user) => {
+    User.findOne({ _id: req.query.id }.then((user) => {
         if (!user) {
             return res.status(404).json({ success: false, error: `User not found` })
         }
@@ -33,7 +33,7 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    await User.findOneAndDelete({ _id: req.params.id }.then((user) => {
+    await User.findOneAndDelete({ _id: req.query.id }.then((user) => {
         if (!user) {
             return res.status(404).json({ success: false, error: `User not found` })
         }
@@ -42,7 +42,7 @@ const deleteUser = async (req, res) => {
 }
 
 const getUserById = async (req, res) => {
-    await User.findById({ _id: req.params.id }).then((user) => {
+    await User.findById({ _id: req.query.id }).then((user) => {
         if( !user) {
             return res.status(404).json({ success: false, error: `Users not found` })
         }
@@ -54,8 +54,8 @@ const getUserById = async (req, res) => {
 }
 
 const getUsers = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
     await User
         .find() // conditition
         .skip((perPage * page) - perPage)

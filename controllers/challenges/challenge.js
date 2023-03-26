@@ -87,8 +87,8 @@ const getChallengeById = async (req, res) => {
 }
 
 const getChallenges = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
     await Challenge
         .find() // conditition
         .skip((perPage * page) - perPage)
@@ -107,10 +107,10 @@ const getChallenges = async (req, res) => {
 }
 
 const searchChallenges = async (req, res) => {
-    let perPage = 25;
-    let page = req.params.page || 1;
+    let perPage = req.query.perPage;
+    let page = req.query.page || 1;
     await Challenge
-        .find({email: res.params.email}) // conditition
+        .find({email: req.query.email}) // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((challenges) => {
