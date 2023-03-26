@@ -111,7 +111,6 @@ const getCandidates = async (req, res) => {
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
     let count = await Candidate.countDocuments({})
-    console.log("Count: ", count);
     await Candidate
         .find() // conditition
         .skip((perPage * page) - perPage)
@@ -135,8 +134,9 @@ const getCandidates = async (req, res) => {
 const searchCandidates = async (req, res) => {
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
+    let count = await Candidate.countDocuments({ email: { $regex: req.params.email}})
     await Candidate
-        .find({ email: req.query.email }) // conditition
+        .find({ email: { $regex: req.params.email}}) // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((candidates) => {
@@ -147,7 +147,10 @@ const searchCandidates = async (req, res) => {
             }
             return res.status(200).json({
                 success: true,
-                data: candidates
+                data: candidates,
+                count: count,
+                perPage: perPage,
+                page: page
             })
         });
 }

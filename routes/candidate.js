@@ -10,6 +10,6 @@ router.get('/candidate/:id', candidateControllers.getCandidateById)
 router.put('/candidate/:id', candidateControllers.updateCandidate)
 router.delete('/candidate/:id', candidateControllers.deleteCandidate)
 router.get('/candidates', candidateControllers.getCandidates)
-router.get('/candidate/:email', candidateControllers.searchCandidates)
+router.get('/search/:email', candidateControllers.searchCandidates)
 
 module.exports = router
