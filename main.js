@@ -50,7 +50,7 @@ app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/user', userRouter)
 // app.use('/api/user',validateToken, userRouter)
 app.use('/api/v1/candidate', candidateRouter)
-app.use('/api/v1/comment',validateToken, commentRouter)
+app.use('/api/v1/comment', commentRouter)
 app.use('/api/v1/exam',validateToken, examRouter)
 app.use('/api/v1/challenge',validateToken, challengeRouter)
 

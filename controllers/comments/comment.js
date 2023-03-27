@@ -88,9 +88,7 @@ const getCommentById = async (req, res) => {
 
 const getComments = async (req, res) => {
     await Comment
-    .find() // conditition
-    .skip((perPage * page) - perPage)
-    .limit(perPage)
+    .find({candidate_id: req.params.id}) // conditition
     .then((comments) => {
         if (!comments.length) {
             return res
