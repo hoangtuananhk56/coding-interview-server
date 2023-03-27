@@ -1,7 +1,7 @@
 const Challenge = require('../../models/challenges/challenge')
 
 const createChallenge = async (req, res) => {
-	const { examid, name } = req.body
+	const { examids, name } = req.body
 	try {
 		// All good
 		const newChallenge = new Challenge({ examids, name })
@@ -110,7 +110,7 @@ const searchChallenges = async (req, res) => {
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
     await Challenge
-        .find({email: req.query.email}) // conditition
+        .find({name: {$regex: req.params.name}}) // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((challenges) => {

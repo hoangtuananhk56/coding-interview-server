@@ -6,10 +6,10 @@ const router = express.Router()
 
 //router to Challenge
 router.post('/', challengeControllers.createChallenge)
-router.get('/:id', challengeControllers.getChallengeById)
-router.put('/:id', challengeControllers.updateChallenge)
-router.delete('/:id', challengeControllers.deleteChallenge)
+router.get('/challenge/:id', challengeControllers.getChallengeById)
+router.put('/challenge/:id', challengeControllers.updateChallenge)
+router.delete('/challenge/:id', challengeControllers.deleteChallenge)
 router.get('/challenges', challengeControllers.getChallenges)
-router.get('/:name', challengeControllers.searchChallenges)
+router.get('/search/:name', challengeControllers.searchChallenges)
 
 module.exports = router

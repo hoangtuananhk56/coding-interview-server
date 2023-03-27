@@ -46,13 +46,13 @@ app.post("/compile", (req, res) => {
 		});
 })
 
+// app.use('/api/user',validateToken, userRouter) : check token before call api
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/user', userRouter)
-// app.use('/api/user',validateToken, userRouter)
 app.use('/api/v1/candidate', candidateRouter)
 app.use('/api/v1/comment', commentRouter)
-app.use('/api/v1/exam',validateToken, examRouter)
-app.use('/api/v1/challenge',validateToken, challengeRouter)
+app.use('/api/v1/exam', examRouter)
+app.use('/api/v1/challenge', challengeRouter)
 
 app.listen(process.env.PORT, () => {
 	console.log(`Server listening on port ${process.env.PORT}`);

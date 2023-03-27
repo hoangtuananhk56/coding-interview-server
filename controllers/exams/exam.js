@@ -93,21 +93,22 @@ const getExamById = async (req, res) => {
 }
 
 const getExams = async (req, res) => {
+    console.log(req.query.perPage);
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
     await Exam
         .find() // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
-        .then((Exams) => {
-            if (!Exams.length) {
+        .then((exams) => {
+            if (!exams.length) {
                 return res
                     .status(404)
-                    .json({ success: false, error: `Exams not found` })
+                    .json({ success: false, error: `Exam not found` })
             }
             return res.status(200).json({
                 success: true,
-                data: Exams
+                data: exams
             })
         });
 }
