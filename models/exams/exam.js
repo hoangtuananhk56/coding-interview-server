@@ -6,8 +6,8 @@ const Exam = new Schema(
         title: { type: String, required: true },
         challenge_type: { type: String, required: true },
         type: { type: String, required: true },
+        content: { type: String, required: true },
         coding: {
-            content: String,
             input: String,
             output: String,
             testcase: [{
@@ -15,22 +15,15 @@ const Exam = new Schema(
                 output: { type: String, required: false }
             }]
         },
-        checkbox: {
-            content: String,
-            result: [{
-                isCheck: Boolean,
+        checkbox: [{
+                ischeck: Boolean,
                 option: String,
-            }]
-        },
-        radio: {
-            content: String,
-            result: [{
-                isCheck: Boolean,
+            }],
+        radio:[{
+                ischeck: Boolean,
                 option: String,
-            }]
-        },
+            }],
         writting: {
-            content: String,
             result: String
         }
     },

@@ -25,32 +25,20 @@ const updateChallenge = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-
-    Challenge.findOne({ _id: req.params.id }, (err, challenge) => {
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'Challenge not found!',
-            })
-        }
-        challenge.name = body.name
-        challenge.time = body.time
-        challenge.examids = body.examids
-        challenge
-            .save()
-            .then(() => {
-                return res.status(200).json({
-                    success: true,
-                    id: challenge._id,
-                    message: 'Challenge updated!',
-                })
-            })
-            .catch(error => {
-                return res.status(404).json({
-                    error,
-                    message: 'Challenge not updated!',
-                })
-            })
+    Challenge.findByIdAndUpdate(req.params.id, {
+        name : body.name,
+        examids : body.examids
+    }).then(() => {
+        return res.status(200).json({
+            success: true,
+            message: 'Challenge updated!',
+        })
+    })
+    .catch(error => {
+        return res.status(404).json({
+            error,
+            message: 'Challenge not updated!',
+        })
     })
 }
 
@@ -89,6 +77,7 @@ const getChallengeById = async (req, res) => {
 const getChallenges = async (req, res) => {
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
+    let count = await Challenge.countDocuments({})
     await Challenge
         .find() // conditition
         .skip((perPage * page) - perPage)
@@ -101,7 +90,10 @@ const getChallenges = async (req, res) => {
             }
             return res.status(200).json({
                 success: true,
-                data: challenges
+                data: challenges,
+                count: count,
+                perPage: perPage,
+                page: page
             })
         });
 }
@@ -109,6 +101,7 @@ const getChallenges = async (req, res) => {
 const searchChallenges = async (req, res) => {
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
+    let count = await Challenge.countDocuments({ name: {$regex: req.params.name}})
     await Challenge
         .find({name: {$regex: req.params.name}}) // conditition
         .skip((perPage * page) - perPage)
@@ -121,7 +114,10 @@ const searchChallenges = async (req, res) => {
             }
             return res.status(200).json({
                 success: true,
-                data: challenges
+                data: challenges,
+                count: count,
+                perPage: perPage,
+                page: page
             })
         });
 }

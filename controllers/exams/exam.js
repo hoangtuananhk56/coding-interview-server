@@ -1,17 +1,18 @@
 const Exam = require('../../models/exams/exam')
 
 const createExam = async (req, res) => {
-    const { title, challenge_type, type, coding, checkbox, radio, writting } = req.body
+    const { title, challenge_type, type,content, coding, checkbox, radio, writting } = req.body
 
     // Simple validation
     try {
         // All good
-        const newExam = new Exam({ title, challenge_type, type, coding, checkbox, radio, writting })
+        const newExam = new Exam({ title, challenge_type, type, content, coding, checkbox, radio, writting })
         await newExam.save()
 
         res.json({
             success: true,
             message: 'Exam created successfully',
+            data: newExam
         })
     } catch (error) {
         console.log(error)
@@ -28,35 +29,25 @@ const updateExam = async (req, res) => {
         })
     }
 
-    Exam.findOne({ _id: req.query.id }, (err, exam) => {
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'Exam not found!',
-            })
-        }
-        exam.title = body.name
-        exam.challenge_type = body.time
-        exam.type = body.email
-        exam.coding = body.phone
-        exam.checkbox = body.phone
-        exam.radio = body.phone
-        exam.writting = body.writting
-        exam
-            .save()
-            .then(() => {
-                return res.status(200).json({
-                    success: true,
-                    id: exam._id,
-                    message: 'Exam updated!',
-                })
-            })
-            .catch(error => {
-                return res.status(404).json({
-                    error,
-                    message: 'Exam not updated!',
-                })
-            })
+    Exam.findByIdAndUpdate(req.params.id, {
+        title : body.title,
+        challenge_type : body.challenge_type,
+        type: body.type,
+        coding: body.coding,
+        checkbox: body.checkbox,
+        radio: body.radio,
+        writting: body.writting,
+    }).then(() => {
+        return res.status(200).json({
+            success: true,
+            message: 'Challenge updated!',
+        })
+    })
+    .catch(error => {
+        return res.status(404).json({
+            error,
+            message: 'Challenge not updated!',
+        })
     })
 }
 
@@ -96,6 +87,7 @@ const getExams = async (req, res) => {
     console.log(req.query.perPage);
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
+    let count = await Exam.countDocuments({})
     await Exam
         .find() // conditition
         .skip((perPage * page) - perPage)
@@ -108,7 +100,10 @@ const getExams = async (req, res) => {
             }
             return res.status(200).json({
                 success: true,
-                data: exams
+                data: exams,
+                count: count,
+                perPage: perPage,
+                page: page
             })
         });
 }
@@ -116,8 +111,9 @@ const getExams = async (req, res) => {
 const searchExams = async (req, res) => {
     let perPage = req.query.perPage;
     let page = req.query.page || 1;
+    let count = await Exam.countDocuments({ title: {$regex: req.params.title}})
     await Exam
-        .find({ title: req.params.title }) // conditition
+        .find({ title: {$regex: req.params.title} }) // conditition
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .then((Exams) => {
@@ -128,7 +124,10 @@ const searchExams = async (req, res) => {
             }
             return res.status(200).json({
                 success: true,
-                data: Exams
+                data: Exams,
+                count: count,
+                perPage: perPage,
+                page: page
             })
         });
 }
