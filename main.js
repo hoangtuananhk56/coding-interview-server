@@ -16,36 +16,6 @@ app.use(cors());
 app.use(express.json());
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-app.post("/compile", (req, res) => {
-	//getting the required data from the request
-	let code = req.body.code;
-	let language = req.body.language;
-	let input = req.body.input;
-
-	let data = ({
-		"code": code,
-		"language": language,
-		"input": input
-	});
-	
-	let config = {
-		method: 'post',
-		url: 'https://api.codex.jaagrav.in',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		data: data
-	};
-	//calling the code compilation API
-	Axios(config)
-		.then((response)=>{
-			res.send(response.data)
-			console.log(response.data)
-		}).catch((error)=>{
-			console.log(error);
-		});
-})
-
 // app.use('/api/user',validateToken, userRouter) : check token before call api
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/user', userRouter)

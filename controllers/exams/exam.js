@@ -1,4 +1,5 @@
 const Exam = require('../../models/exams/exam')
+const Axios = require("axios");
 
 const createExam = async (req, res) => {
     const { title, challenge_type, type,content, coding, checkbox, radio, writting } = req.body
@@ -132,11 +133,41 @@ const searchExams = async (req, res) => {
         });
 }
 
+const runCode = async(req, res) => {
+    let code = req.body.code;
+	let language = req.body.language;
+	let input = req.body.input;
+
+	let data = ({
+		"code": code,
+		"language": language,
+		"input": input
+	});
+	
+	let config = {
+		method: 'post',
+		url: 'https://api.codex.jaagrav.in',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		data: data
+	};
+	//calling the code compilation API
+	await Axios(config)
+		.then((response)=>{
+            //Check response with result of exam
+			res.send(response.data)
+			console.log(response.data)
+		}).catch((error)=>{
+			console.log(error);
+		});
+}
 module.exports = {
     createExam,
     updateExam,
     deleteExam,
     getExams,
     getExamById,
-    searchExams
+    searchExams,
+    runCode
 }

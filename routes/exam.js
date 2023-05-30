@@ -11,5 +11,6 @@ router.put('/exam/:id', examControllers.updateExam)
 router.delete('/exam/:id', examControllers.deleteExam)
 router.get('/exams', examControllers.getExams)
 router.get('/search/:title', examControllers.searchExams)
+router.post('/runcode', examControllers.runCode)
 
 module.exports = router
