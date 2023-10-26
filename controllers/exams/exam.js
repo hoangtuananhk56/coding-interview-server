@@ -10,7 +10,7 @@ const createExam = async (req, res) => {
     coding,
     checkbox,
     radio,
-    writting,
+    writing,
   } = req.body;
 
   // Simple validation
@@ -24,7 +24,7 @@ const createExam = async (req, res) => {
       coding,
       checkbox,
       radio,
-      writting,
+      writing,
     });
     await newExam.save();
 
@@ -52,10 +52,11 @@ const updateExam = async (req, res) => {
     title: body.title,
     challenge_type: body.challenge_type,
     type: body.type,
+    content: body.content,
     coding: body.coding,
     checkbox: body.checkbox,
     radio: body.radio,
-    writting: body.writting,
+    writing: body.writing,
   })
     .then(() => {
       return res.status(200).json({
@@ -102,11 +103,11 @@ const getExamById = async (req, res) => {
 };
 
 const getExams = async (req, res) => {
-  console.log(req.query.perPage);
   let perPage = req.query.perPage;
   let page = req.query.page || 1;
-  let count = await Exam.countDocuments({});
-  await Exam.find() // conditition
+  let challengeType = req.query.challengeType || "sql";
+  let count = await Exam.countDocuments({ challenge_type: challengeType });
+  await Exam.find({ challenge_type: challengeType }) // conditition
     .skip(perPage * page - perPage)
     .limit(perPage)
     .sort({ updatedAt: -1 })
