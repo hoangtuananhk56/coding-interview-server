@@ -130,10 +130,15 @@ const getExams = async (req, res) => {
 const searchExams = async (req, res) => {
   let perPage = req.query.perPage;
   let page = req.query.page || 1;
+  let challenge_type = req.query.type || "SQL";
   let count = await Exam.countDocuments({
     title: { $regex: req.params.title },
+    challenge_type: challenge_type,
   });
-  await Exam.find({ title: { $regex: req.params.title } }) // conditition
+  await Exam.find({
+    title: { $regex: req.params.title },
+    challenge_type: challenge_type,
+  }) // conditition
     .skip(perPage * page - perPage)
     .limit(perPage)
     .sort({ updatedAt: -1 })
