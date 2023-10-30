@@ -1,16 +1,17 @@
-const express = require('express')
+const express = require("express");
 
-const examControllers = require('../controllers/exams/exam')
+const examControllers = require("../controllers/exams/exam");
 
-const router = express.Router()
+const router = express.Router();
 
 //router to Exam
-router.post('/', examControllers.createExam)
-router.get('/exam/:id', examControllers.getExamById)
-router.put('/exam/:id', examControllers.updateExam)
-router.delete('/exam/:id', examControllers.deleteExam)
-router.get('/exams', examControllers.getExams)
-router.get('/search/:title', examControllers.searchExams)
-router.post('/runcode', examControllers.runCode)
+router.post("/", examControllers.createExam);
+router.get("/exam/:id", examControllers.getExamById);
+router.put("/exam/:id", examControllers.updateExam);
+router.delete("/exam/:id", examControllers.deleteExam);
+router.get("/exams", examControllers.getExams);
+router.get("/search/:title", examControllers.searchExams);
+router.get("/search_list/:title", examControllers.searchListExams);
+router.post("/runcode", examControllers.runCode);
 
-module.exports = router
+module.exports = router;

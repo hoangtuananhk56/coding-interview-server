@@ -158,6 +158,34 @@ const searchExams = async (req, res) => {
     });
 };
 
+const searchListExams = async (req, res) => {
+  let perPage = req.query.perPage;
+  let page = req.query.page || 1;
+  let count = await Exam.countDocuments({
+    title: { $regex: req.params.title },
+  });
+  await Exam.find({
+    title: { $regex: req.params.title },
+  }) // conditition
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .sort({ updatedAt: -1 })
+    .then((Exams) => {
+      if (!Exams.length) {
+        return res
+          .status(404)
+          .json({ success: false, error: `Exams not found` });
+      }
+      return res.status(200).json({
+        success: true,
+        data: Exams,
+        count: count,
+        perPage: perPage,
+        page: page,
+      });
+    });
+};
+
 const runCode = async (req, res) => {
   let code = req.body.code;
   let language = req.body.language;
@@ -196,4 +224,5 @@ module.exports = {
   getExamById,
   searchExams,
   runCode,
+  searchListExams,
 };
