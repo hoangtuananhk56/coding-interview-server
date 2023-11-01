@@ -11,18 +11,18 @@ const transport = nodemailer.createTransport({
 });
 
 const sendEmail = (req, res) => {
-  const { receiver, subject, url } = req.body;
+  const { email, name, subject, url } = req.body;
   try {
     ejs.renderFile(
       __dirname + "/templates/welcome.ejs",
-      { receiver, url },
+      { name, url },
       (err, data) => {
         if (err) {
           console.log(err);
         } else {
           var mailOptions = {
             from: process.env.EMAIL_SYSTEM,
-            to: receiver,
+            to: email,
             subject: subject,
             html: data,
           };
